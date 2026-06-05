@@ -1,0 +1,25 @@
+{
+  "short_name": "Mind Well",
+  "name": "Mind Well",
+  "icons": [
+    {
+      "src": "fav_icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0E748A",
+  "background_color": "#f3f7fc"
+}
