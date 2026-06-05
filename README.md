@@ -1,309 +1,243 @@
-# Mind Well - Mental Health Assessment Platform
+# Mind Well — AI Mental Health Assessment
 
-An AI-powered mental health assessment platform that provides personalized wellness guidance based on lifestyle indicators. Built with React frontend, Node.js backend, and Google's Gemini AI.
+> A full-stack web app that analyzes lifestyle indicators and delivers personalized, doctor-style wellness reports powered by Google Gemini AI.
+
+---
 
 ## Overview
 
-Mind Well helps users understand their mental health status by analyzing five key wellness indicators:
-- **Sleep Quality**: Hours and quality of sleep
-- **Screen Time**: Daily digital device usage
-- **Physical Activity**: Minutes of movement/exercise
-- **Stress Levels**: Self-reported stress
-- **Mood**: Self-reported emotional state
+Mind Well collects five lifestyle data points from the user, retrieves relevant clinical rules from a Pinecone vector database, and passes everything to a large language model to generate a structured wellness report — no diagnosis, no medication, just actionable guidance.
 
-The system generates evidence-based recommendations and actionable insights tailored to each user's wellness profile.
+**Assessment inputs**
+
+| Field | Description |
+|---|---|
+| Sleep | Hours per night + usual bedtime |
+| Screen Time | Weekday and weekend hours, primary device |
+| Device Anxiety | How often devices cause stress |
+| Mood | Low-mood frequency (rarely / sometimes / often) |
+| Academic Satisfaction | Self-reported study/work satisfaction |
+
+**Report sections**
+
+- Clinical Snapshot
+- Key Findings
+- Lifestyle Prescription
+- Improvement Suggestions
+- Follow-Up
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Tailwind CSS, React Markdown, html2pdf.js |
+| Backend | Node.js, Express.js |
+| AI Model | Google Gemini 2.5 Flash (via OpenRouter) |
+| Knowledge Base | Pinecone vector database |
+
+---
 
 ## Project Structure
 
 ```
-metal_health_AI/app/
-├── frontend/                    # React application
-│   ├── public/                  # Static assets & favicons
-│   ├── src/
-│   │   ├── App.js              # Main app component
-│   │   ├── AssessmentPage.js   # Assessment & results UI
-│   │   ├── index.js            # Entry point
-│   │   └── index.css           # Global styles
-│   ├── package.json            # Dependencies
-│   ├── tailwind.config.js      # Tailwind CSS config
-│   └── README.md               # Frontend documentation
+app/
+├── frontend/
+│   ├── public/               # Static assets, favicon, manifest
+│   └── src/
+│       ├── App.js            # Root component, API calls
+│       ├── AssessmentPage.js # Form + results UI
+│       ├── LoadingPage.js    # Animated loading screen
+│       ├── index.js          # Entry point
+│       └── index.css         # Global styles
 │
-├── backend/                     # Node.js API server
-│   ├── server.js               # Express app & endpoints
-│   ├── package.json            # Dependencies
-│   ├── .env                    # Environment variables
-│   └── README.md               # Backend documentation
-│
-└── .vscode/                     # VS Code settings & tasks
-    └── tasks.json              # Development tasks
+└── backend/
+    ├── server.js             # Express app, routes, AI logic
+    └── package.json
 ```
 
-## Tech Stack
-
-### Frontend
-- **React 18.2.0** - UI framework
-- **Tailwind CSS** - Responsive styling
-- **React Markdown** - Display AI insights
-- **html2pdf.js** - PDF report generation
-- **Canvas API** - Animation rendering
-
-### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - HTTP server framework
-- **Google Gemini 2.5 Flash** - AI model (via OpenRouter)
-- **Pinecone** - Vector database for health knowledge
-- **CORS** - Cross-origin request handling
-
-## Features
-
-### Core Assessment
-- **5-Field Form**: Sleep, screen time, activity, stress, mood
-- **Responsive Design**: Mobile, tablet, and desktop optimized
-- **Real-time Validation**: Input checks and feedback
-- **Loading Animation**: Interactive 3D particle animation
-
-### Results & Insights
-- **Risk Assessment**: Categorized wellness risk levels
-- **Clinical Snapshot**: AI-generated clinical summary
-- **Evidence-Based Insights**: Personalized health observations
-- **Actionable Recommendations**: Specific wellness guidance
-- **PDF Export**: Download reports as PDF documents
-
-### System Features
-- **Rate Limiting**: Protect API from abuse
-- **Error Handling**: Graceful error messages
-- **Health Monitoring**: API status and dependency checks
-- **Usage Statistics**: Track assessment metrics
+---
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 16+
-- npm or yarn
-- OpenRouter API key (for Gemini AI)
-- Pinecone API key (for knowledge base)
+- [OpenRouter](https://openrouter.ai) API key
+- [Pinecone](https://pinecone.io) API key with an index named `mental-health-rules`
 
-### Quick Start
+### 1. Backend
 
-1. **Clone and navigate**
-   ```bash
-   cd app
-   ```
-
-2. **Backend Setup**
-   ```bash
-   cd backend
-   cp .env.example .env  # Add your API keys
-   npm install
-   npm start
-   ```
-   Server runs on `http://localhost:5000`
-
-3. **Frontend Setup** (new terminal)
-   ```bash
-   cd frontend
-   npm install
-   npm start
-   ```
-   App opens at `http://localhost:3000`
-
-4. **Test the App**
-   - Navigate to `http://localhost:3000`
-   - Fill the assessment form (all fields 1-10)
-   - Click "Get Wellness Insights"
-   - View results and download PDF
-
-## API Reference
-
-See [backend/README.md](backend/README.md) for complete API documentation.
-
-### Key Endpoints
-
-```
-POST   /api/assess          # Submit wellness assessment
-GET    /api/health          # System health check
-GET    /api/stats           # Usage statistics
-POST   /api/feedback        # Record user feedback
+```bash
+cd backend
+cp .env.example .env   # fill in your keys
+npm install
+npm start
 ```
 
-## Configuration
+Server starts at `http://localhost:5000`.
 
-### Frontend Environment
+### 2. Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+App opens at `http://localhost:3000`.
+
+---
+
+## Environment Variables
+
+### Backend — `backend/.env`
+
+```env
+OPENROUTER_API_KEY=sk-or-...
+PINECONE_API_KEY=pcsk-...
+RULES_INDEX=mental-health-rules
+
+PORT=5000
+HOST=0.0.0.0
+CHAT_MODEL=google/gemini-2.5-flash-lite
+RATE_LIMIT_RPM=30
+CORS_ORIGINS=http://localhost:3000
+
+# Optional: protect endpoints with a shared secret
+API_KEY=
+```
+
+### Frontend — `frontend/.env`
 
 ```env
 REACT_APP_API_URL=http://localhost:5000
 ```
 
-### Backend Environment
+---
 
-```env
-OPENROUTER_API_KEY=sk-or-your-key-here
-PINECONE_API_KEY=your-pinecone-key
-PORT=5000
-HOST=0.0.0.0
-CHAT_MODEL=google/gemini-2.5-flash-lite
-RATE_LIMIT_RPM=30
-CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+## API Reference
+
+### `POST /api/assess`
+
+Submit a lifestyle assessment and receive a wellness report.
+
+**Request body**
+
+```json
+{
+  "assessment": {
+    "sleep": 6,
+    "bedtime": "12:00 AM",
+    "screen": 5,
+    "weekendScreen": 7,
+    "primaryDevice": "phone",
+    "deviceAnxiety": "sometimes",
+    "mood": "often",
+    "academicSatisfaction": "neutral"
+  }
+}
 ```
 
-## Development
+**Response**
 
-### Available Scripts
-
-**Frontend:**
-```bash
-npm start              # Development server
-npm run build         # Production build
-npm test              # Run tests
-npm run eject         # Eject from Create React App
+```json
+{
+  "summary": "## **Clinical Snapshot**\n...",
+  "recommendations": "...",
+  "matchedRules": [...],
+  "processingTimeMs": 1840
+}
 ```
 
-**Backend:**
-```bash
-npm start             # Development server
-npm run dev           # Dev server with restart on changes
-npm test              # Run tests
+---
+
+### `GET /api/health`
+
+Returns server status and dependency health checks.
+
+```json
+{
+  "status": "ok",
+  "version": "1.0.0",
+  "uptimeSeconds": 342.5,
+  "dependencies": {
+    "pinecone": "ok",
+    "openrouter": "ok"
+  }
+}
 ```
 
-### Project Commands
+---
 
-From root directory:
+### `GET /api/stats` _(requires API key)_
 
-```bash
-# Start both servers in parallel (requires concurrently)
-npm run dev
+Returns usage counters.
 
-# Build frontend
-cd frontend && npm run build
+---
 
-# Deploy build to backend
-cp -r frontend/build/* backend/public/
+### `POST /api/feedback` _(requires API key)_
+
+Record a thumbs-up / thumbs-down rating.
+
+```json
+{ "rating": "up", "comment": "Very helpful!" }
 ```
 
-## Styling
-
-### Design System
-
-**Colors:**
-- Primary Teal: `#0E748A`
-- Dark Text: `#0f172a`
-- Muted Text: `#64748b`
-- Light Background: `#f3f7fc`
-- Wave Gradient: Teal to cyan animations
-
-**Typography:**
-- Font: Inter (from Google Fonts)
-- Weights: 400, 500, 600, 700, 800
-- Sizes: Responsive with Tailwind breakpoints
-
-**Breakpoints:**
-- Mobile: < 640px
-- Tablet: 640px - 1023px
-- Desktop: ≥ 1024px
-
-## Performance
-
-### Metrics
-
-- **Frontend Build**: ~150KB gzipped
-- **API Response**: 1.2 - 2.5 seconds (includes AI processing)
-- **Page Load**: < 2 seconds on 4G
-- **Lighthouse Score**: 90+ (Performance, Accessibility, Best Practices)
-
-### Optimization
-
-- Tree-shaking CSS with Tailwind
-- Lazy code splitting with React
-- Canvas-based animations (GPU accelerated)
-- API rate limiting and caching
-- Compression on responses > 1KB
-
-## Security
-
-1. **API Key Management**
-   - Never commit `.env` files
-   - Use environment-specific keys
-   - Rotate keys regularly
-
-2. **CORS Protection**
-   - Whitelist frontend origins only
-   - Disable in sensitive environments
-
-3. **Input Validation**
-   - Validate all assessment data
-   - Limit file uploads
-   - Implement rate limiting
-
-4. **HTTPS**
-   - Use HTTPS in production
-   - Enforce in server headers
-   - Use secure cookies only
+---
 
 ## Deployment
 
-### Frontend (Vercel/Netlify)
+### Frontend — Vercel / Netlify
 
 ```bash
 cd frontend
 npm run build
-# Deploy build/ folder to hosting service
+# deploy the build/ folder
 ```
 
-### Backend (Heroku/Railway)
+Set `REACT_APP_API_URL` to your production backend URL in the platform's environment settings.
+
+### Backend — Railway / Render / Heroku
+
+Push the `backend/` directory and set all environment variables in the platform dashboard.
 
 ```bash
-# Set environment variables
-# Deploy with platform CLI
 heroku create mindwell-api
+heroku config:set OPENROUTER_API_KEY=... PINECONE_API_KEY=...
 git push heroku main
 ```
 
+---
+
+## Security Notes
+
+- Never commit `.env` files — they are listed in `.gitignore`.
+- Set `CORS_ORIGINS` to your exact frontend domain in production.
+- Enable `API_KEY` auth on stat and feedback endpoints in production.
+- Always serve the backend over HTTPS in production.
+
+---
+
 ## Troubleshooting
 
-### Port Conflicts
-- Frontend port 3000: Will auto-use 3001 if taken
-- Backend port 5000: Change in `.env` if needed
+**Port already in use**
+Change `PORT` in `backend/.env`. The React dev server auto-increments to 3001 if 3000 is taken.
 
-### API Key Issues
-- OpenRouter: Get key from [openrouter.ai](https://openrouter.ai)
-- Pinecone: Get key from [pinecone.io](https://pinecone.io)
+**`FATAL: OPENROUTER_API_KEY is not set`**
+The server will refuse to start without both API keys. Double-check your `.env` file.
 
-### Build Errors
-- Clear node_modules: `rm -rf node_modules && npm install`
-- Clear npm cache: `npm cache clean --force`
+**Blank or error report**
+Check the browser console and backend logs. Most failures are API key or Pinecone index name mismatches.
 
-See individual [frontend/README.md](frontend/README.md) and [backend/README.md](backend/README.md) for detailed troubleshooting.
+**Dependency issues**
+```bash
+rm -rf node_modules && npm install
+```
 
-## Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari 13+, Chrome Mobile)
-
-## Contributing
-
-1. Follow existing code style
-2. Keep components focused and reusable
-3. Document complex logic
-4. Test across devices before committing
-5. Update README if adding features
+---
 
 ## License
 
 © 2026 Mind Well. All rights reserved.
-
-## Support
-
-For issues, feature requests, or questions:
-- Check existing documentation
-- Review error messages in browser console
-- Check backend logs for API issues
-- Verify API keys and environment variables
-
----
-
-**Version**: 1.0.0  
-**Last Updated**: April 12, 2026  
-**Status**: Active Development
