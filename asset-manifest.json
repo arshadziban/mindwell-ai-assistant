@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/mindwell-ai-assistant/static/css/main.528ee1d8.css",
-    "main.js": "/mindwell-ai-assistant/static/js/main.8dfa0f14.js",
+    "main.css": "/mindwell-ai-assistant/static/css/main.e5837c49.css",
+    "main.js": "/mindwell-ai-assistant/static/js/main.2bb70f68.js",
     "index.html": "/mindwell-ai-assistant/index.html",
-    "main.528ee1d8.css.map": "/mindwell-ai-assistant/static/css/main.528ee1d8.css.map",
-    "main.8dfa0f14.js.map": "/mindwell-ai-assistant/static/js/main.8dfa0f14.js.map"
+    "main.e5837c49.css.map": "/mindwell-ai-assistant/static/css/main.e5837c49.css.map",
+    "main.2bb70f68.js.map": "/mindwell-ai-assistant/static/js/main.2bb70f68.js.map"
   },
   "entrypoints": [
-    "static/css/main.528ee1d8.css",
-    "static/js/main.8dfa0f14.js"
+    "static/css/main.e5837c49.css",
+    "static/js/main.2bb70f68.js"
   ]
 }
