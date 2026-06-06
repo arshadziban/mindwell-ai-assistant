@@ -288,7 +288,7 @@ function TimePickerField({ value, onChange }) {
 function AssessmentForm({ onSubmit }) {
   const [sleep, setSleep] = useState("");
   const [screen, setScreen] = useState("");
-  const [mood, setMood] = useState("");
+  const [mood] = useState("sometimes");
   const [weekendScreen, setWeekendScreen] = useState("");
   const [primaryDevice, setPrimaryDevice] = useState("");
   const [bedtime, setBedtime] = useState("23:00");
@@ -297,7 +297,7 @@ function AssessmentForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!sleep || !screen || !mood || !weekendScreen || !primaryDevice || !bedtime || !deviceAnxiety || !academicSatisfaction) return;
+    if (!sleep || !screen || !weekendScreen || !primaryDevice || !bedtime || !deviceAnxiety || !academicSatisfaction) return;
     onSubmit({
       sleep: parseFloat(sleep),
       screen: parseFloat(screen),
@@ -316,7 +316,7 @@ function AssessmentForm({ onSubmit }) {
   const sectionTitleClass = "text-[16px] font-semibold text-slate-900 mb-5 mt-7 pt-2 flex items-center";
   const sectionDivider = "h-px bg-gradient-to-r from-slate-100 to-transparent mb-6 mt-8";
 
-  const filled = sleep && screen && mood && weekendScreen && primaryDevice && bedtime && deviceAnxiety && academicSatisfaction;
+  const filled = sleep && screen && weekendScreen && primaryDevice && bedtime && deviceAnxiety && academicSatisfaction;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -441,30 +441,6 @@ function AssessmentForm({ onSubmit }) {
           </div>
         </div>
 
-        {/* Mood */}
-        <div className="fade-up fade-up-14 mt-4">
-          <label className={labelClass}>How often do you feel low or unmotivated?</label>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { key: "rarely", label: "Rarely" },
-              { key: "sometimes", label: "Sometimes" },
-              { key: "often", label: "Often" },
-            ].map((opt) => (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => setMood(opt.key)}
-                className={`text-center py-4 px-3 rounded-lg transition-all border font-normal text-[13px] ${
-                  mood === opt.key
-                    ? "bg-cyan-700 border-cyan-700 text-white"
-                    : "bg-white border-slate-200 text-slate-600 hover:border-cyan-300"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Academic Satisfaction */}
         <div className="fade-up fade-up-15 mt-4">
@@ -648,14 +624,22 @@ function ResultsView({ result, onReset }) {
 }
 
 export default function AssessmentPage({ onSubmit, result, error, onReset }) {
+  const mainRef = useRef(null);
+
+  useEffect(() => {
+    if (result && mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+  }, [result]);
+
   return (
     <div className="min-h-screen bg-transparent flex flex-col">
       <style>{customStyles}</style>
 
-      <main className="flex-1 overflow-y-auto assess-scroll">
+      <main ref={mainRef} className="flex-1 overflow-y-auto assess-scroll">
         <div className="w-full max-w-[760px] mx-auto px-4 sm:px-8 pt-9 sm:pt-14 pb-10 sm:pb-16">
           <div className="mb-8 sm:mb-10">
-            <img src="/logo_horizontal.png" alt="Mind Well Logo" className="h-[36px] sm:h-[38px] w-auto" />
+            <img src={`${process.env.PUBLIC_URL}/logo_horizontal.png`} alt="Mind Well Logo" className="h-[36px] sm:h-[38px] w-auto" />
           </div>
 
           {error && (

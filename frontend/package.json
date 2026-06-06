@@ -2,6 +2,7 @@
   "name": "mindwell-frontend",
   "version": "1.0.0",
   "description": "MindWell - Mental Health AI Assistant",
+  "homepage": "https://arshadziban.github.io/mindwell-ai-assistant",
   "dependencies": {
     "html2pdf.js": "^0.14.0",
     "katex": "^0.16.9",
