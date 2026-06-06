@@ -4,7 +4,7 @@
 
 > A full-stack web application that collects lifestyle data, retrieves clinical rules from a Pinecone vector database, and generates a personalized wellness report using Google Gemini AI.
 
-**Live Demo:** [https://arshadziban.github.io/mindwell-ai-assistant/](https://arshadziban.github.io/mindwell-ai-assistant/)
+**Live Demo:** [https://arshadziban.github.io/mindwell-ai-assistant/](Mind Well)
 
 ---
 
